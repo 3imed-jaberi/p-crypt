@@ -4,6 +4,7 @@
   "description": " this project aims to provide more secure encryption using more than one library and over an algorithm .. ",
   "main": "dist/index.js",
   "scripts": {
+    "test": "mocha --require ts-node/register test/**/*.spec.ts",
     "build": "tsc",
     "build:watch": "tsc --watch"
   },
@@ -29,7 +30,12 @@
   "author": "imed jaberi",
   "license": "MIT",
   "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.6",
     "@types/node": "^12.0.1",
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4",
+    "ts-node": "^8.1.0",
     "typescript": "^3.4.5"
   }
 }
