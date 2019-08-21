@@ -21,7 +21,7 @@ $ npm install p-crypt
 How to use this library is very simple, especially for those who love the promise .. follow this example : 
 
 ```javascript
-const { Crypt, Compare } = require ('./dist/index') ;
+const { Crypt, Compare } = require ('password-crypt') ;
 
 let Password = "Imed Jaberi", Secret = "SomeSecret" , newPassword = Password ;
 
