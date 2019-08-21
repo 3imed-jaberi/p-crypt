@@ -18,4 +18,3 @@ export async function Crypt(Secret:string|number , Password:string ):Promise<str
 export async function Compare(Secret:string|number , Password:string , Hash:string ):Promise<boolean>{
   return await new PasswordCrypt(Secret,Password,Hash).compare_pcrypt();
 };
-

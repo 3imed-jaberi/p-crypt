@@ -1,4 +1,3 @@
-
 import { createHash } from 'crypto' ;
 import { genSalt , hash , compare } from 'bcryptjs';
 
@@ -106,7 +105,4 @@ class PasswordCrypt {
 
 
 export default PasswordCrypt ;
-
-
-
  
