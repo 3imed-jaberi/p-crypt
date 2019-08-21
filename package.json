@@ -1,0 +1,35 @@
+{
+  "name": "p-crypt",
+  "version": "1.0.0",
+  "description": " this project aims to provide more secure encryption using more than one library and over an algorithm .. ",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/3imed-jaberi/p-crypt.git"
+  },
+  "keywords": [
+    "p-crypt",
+    "power-crypto",
+    "pCrypt",
+    "password-crypto",
+    "cryptage",
+    "crypto",
+    "Hash",
+    "chiper",
+    "Hmac",
+    "dechiper",
+    "bcrypt",
+    "javascript",
+    "typescript"
+  ],
+  "author": "imed jaberi",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^12.0.1",
+    "typescript": "^3.4.5"
+  }
+}
