@@ -13,7 +13,7 @@
 
 - NPM :
 ```bash
-$ npm install p-crypt
+$ npm install password-crypt
 ```
 
 ## Usage 
