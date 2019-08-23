@@ -7,6 +7,7 @@
 
 #### A Promise-based library build on top of bcrypt with my logic to help you hash passwords.
 
+##### **`NOTE:`** you can use ES-NEXT feature like async/await ..
 
 ## Installation 
 ---
