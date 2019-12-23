@@ -17,6 +17,12 @@
 $ npm install password-crypt
 ```
 
+- YARN :
+```bash
+$ yarn add password-crypt
+```
+
+
 ## Usage 
 ---
 How to use this library is very simple, especially for those who love the promise .. follow this example : 
@@ -39,6 +45,7 @@ $your_pc_name_with_your_directory
  true
 *****
 ```
+
 
 #### License
 ---
