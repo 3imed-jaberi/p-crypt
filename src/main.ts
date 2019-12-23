@@ -1,11 +1,13 @@
 import { createHash } from 'crypto' ;
 import { genSalt , hash , compare } from 'bcryptjs';
 
+
+
 class PasswordCrypt {
 
-   /**
-    * All Private Attributes .. 
-    */
+  /**
+   * All Private Attributes .. 
+   */
    private password:string;
    private hash:string;
    private Secret:string|number;
@@ -34,7 +36,7 @@ class PasswordCrypt {
     * use the crypto native nodejs module for crypto the password ..
     * @param password : the passwrod value .. 
     */
-   private crypto(password:string):string{
+   private crypto(password:string): string{
           return createHash('sha512').update(password).digest('base64') ;
    }
 
@@ -43,14 +45,15 @@ class PasswordCrypt {
     * use the bcryptjs module for crypto the password .. 
     * @param password : the passwrod value ..  
     */
-   private async bcrypt(password:string):Promise<string>{
+   private async bcrypt(password:string): Promise<string>{
           return await hash(password,await genSalt(10)); 
    }
+
 
    /**
     * anonymous funcs ... <imed /> 
     */
-   private async touch():Promise<string> {
+   private async touch(): Promise<string> {
 
        let crypto:string = await this.crypto(this.password);
           
@@ -68,7 +71,7 @@ class PasswordCrypt {
    /**
     * use my touch for crypto the password .. 
     */
-   public async pcrypt():Promise<string>{
+   public async pcrypt(): Promise<string>{
 
           let result = await this.bcrypt(await this.touch());
 
@@ -88,7 +91,7 @@ class PasswordCrypt {
     * use the bcryptjs module for compare the old hashed password ( bcrypt password ) with new password .. 
     * @param password : the passwrod value ..  
     */
-   private compare_bcrypt(password:string):Promise<boolean>{
+   private compare_bcrypt(password:string): Promise<boolean>{
           return compare(password , this.hash);
    } 
 
@@ -96,13 +99,12 @@ class PasswordCrypt {
    /**
     * compare the old hashed password ( my touch ) with new password .. 
     */
-   public async compare_pcrypt():Promise<boolean>{
+   public async compare_pcrypt(): Promise<boolean>{
        return this.compare_bcrypt(await this.touch());
    }
-   
+
    
 }
 
 
 export default PasswordCrypt ;
- 

@@ -1,7 +1,8 @@
 import PasswordCrypt from './src/main';
 
+
 /**
- * crypto the password .. 
+ * Crypto the password .. 
  * @param Secret : private secret key for customize the crypto .. 
  * @param Password : the passwrod value .. 
  */
@@ -9,12 +10,13 @@ export async function Crypt(Secret:string|number , Password:string ):Promise<str
   return await new PasswordCrypt(Secret,Password).pcrypt();
 };
 
- /**
-  * compare the old crypto pasword with the new for check .... 
-  * @param Secret : private secret key for customize the crypto .. 
-  * @param Password : the passwrod value .. 
-  * @param Hash : the result of crypto ancien password ..  
-  */
+
+/**
+ * Compare the old crypto pasword with the new for check .... 
+ * @param Secret : private secret key for customize the crypto .. 
+ * @param Password : the passwrod value .. 
+ * @param Hash : the result of crypto ancien password ..  
+*/
 export async function Compare(Secret:string|number , Password:string , Hash:string ):Promise<boolean>{
   return await new PasswordCrypt(Secret,Password,Hash).compare_pcrypt();
 };
