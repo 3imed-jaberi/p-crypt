@@ -26,16 +26,13 @@ declare class PasswordCrypt {
      */
     private bcrypt;
     /**
-     * anonymous funcs ... <imed />
-     */
+    * anonymous funcs ... <imed />
+    */
     private touch;
     /**
      * use my touch for crypto the password ..
      */
     pcrypt(): Promise<string>;
-    /**
-     * use the crypto native nodejs module for compare the old hashed password ( crypto password ) with new password ..
-     */
     /**
      * use the bcryptjs module for compare the old hashed password ( bcrypt password ) with new password ..
      * @param password : the passwrod value ..

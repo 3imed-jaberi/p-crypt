@@ -43,17 +43,17 @@ class PasswordCrypt {
         });
     }
     /**
-     * anonymous funcs ... <imed />
-     */
+    * anonymous funcs ... <imed />
+    */
     touch() {
         return __awaiter(this, void 0, void 0, function* () {
             let crypto = yield this.crypto(this.password);
             // step 1 .. 
-            crypto = this.myHead + "*" + this.FounderSecret + "*@ç_à%|" + crypto.substring(0, 20) + this.__Config_Data__ + crypto.substring(20, 50) + this.Secret + crypto.substring(50) + "*";
+            crypto = `${this.myHead}*${this.FounderSecret}*@ç_à%|${crypto.substring(0, 20)}${this.__Config_Data__}${crypto.substring(20, 50)}${this.Secret}${crypto.substring(50)}*`;
             // step 2 ..     
             let preR = crypto.substring(0, 6).split('').map((element) => {
-                let genSoureNumber = (element.charCodeAt(0) * 45).toString();
-                return genSoureNumber.substring(0, 1) + String.fromCharCode(parseInt(genSoureNumber.substring(1, 3))) + genSoureNumber.substring(3, 4);
+                let genSoureNumber = `${(element.charCodeAt(0) * 45)}`;
+                return `${genSoureNumber.substring(0, 1)}${String.fromCharCode(+genSoureNumber.substring(1, 3))}${genSoureNumber.substring(3, 4)}`;
             }).toString() + crypto.substring(6);
             return preR;
         });
@@ -63,16 +63,9 @@ class PasswordCrypt {
      */
     pcrypt() {
         return __awaiter(this, void 0, void 0, function* () {
-            let result = yield this.bcrypt(yield this.touch());
-            return result;
+            return yield this.bcrypt(yield this.touch());
         });
     }
-    /**
-     * use the crypto native nodejs module for compare the old hashed password ( crypto password ) with new password ..
-     */
-    // private compare_crypto(password:string):boolean{
-    //        return createHash('sha512').update(password).digest('base64') === this.LocalHash ;
-    // }
     /**
      * use the bcryptjs module for compare the old hashed password ( bcrypt password ) with new password ..
      * @param password : the passwrod value ..
