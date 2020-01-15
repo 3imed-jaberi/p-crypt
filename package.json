@@ -1,6 +1,6 @@
 {
   "name": "password-crypt",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": " this project aims to provide more secure encryption using more than one library and over an algorithm 🤓 .. ",
   "main": "dist/index.js",
   "scripts": {
