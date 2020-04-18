@@ -1,6 +1,6 @@
 import 'mocha';
 import { expect } from 'chai';
-import { Compare, Crypt } from '../index';
+import { Compare, Crypt } from '.';
 
 
 
