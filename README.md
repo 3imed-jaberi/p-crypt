@@ -10,13 +10,10 @@
 ## Installation 
 ---
 
-- NPM :
 ```bash
+# npm .
 $ npm install password-crypt
-```
-
-- YARN :
-```bash
+# yarn ..
 $ yarn add password-crypt
 ```
 
@@ -28,7 +25,7 @@ How to use this library is very simple, especially for those who love the promis
 ```javascript
 const { Crypt, Compare } = require ('password-crypt') ;
 
-let Password = "Imed Jaberi", Secret = "SomeSecret" , newPassword = Password ;
+let Password = 'Imed Jaberi', Secret = 'SomeSecret' , newPassword = Password;
 
 Crypt (Secret , Password)
  .then( Hash => Compare(Secret , newPassword , Hash))
@@ -47,4 +44,4 @@ $your_pc_name_with_your_directory
 
 #### License
 ---
-[MIT](https://choosealicense.com/licenses/mit/) 
+[MIT](LICENSE) 
