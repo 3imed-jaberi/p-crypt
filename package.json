@@ -1,13 +1,17 @@
 {
   "name": "password-crypt",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": " this project aims to provide more secure encryption using more than one library and over an algorithm 🤓 .. ",
   "main": "dist/index.js",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
-    "test": "mocha --require ts-node/register test/**/*.spec.ts",
+    "test": "mocha --require ts-node/register **/*.spec.ts",
     "build": "tsc",
     "build:watch": "tsc --watch",
-    "cover": "istanbul cover node_modules/mocha/bin/_mocha dist/test/*.js - - -R spec",
+    "cover": "istanbul cover node_modules/mocha/bin/_mocha dist/*.js",
     "ci": "npm run build && npm run cover",
     "postversion": "git push && git push --tags",
     "prepublishOnly": "npm run ci",
@@ -34,13 +38,10 @@
   ],
   "author": {
     "name": "imed jaberi",
-    "email": "3imed.jaberi@gmail.com"
+    "email": "3imed.jaberi@gmail.com",
+    "url": "https://www.3imed-jaberi.com"
   },
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/3imed-jaberi/p-crypt/issues"
-  },
-  "homepage": "https://github.com/3imed-jaberi/p-crypt#readme",
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/chai": "^4.2.7",
@@ -48,7 +49,6 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^13.1.0",
     "chai": "^4.2.0",
-    "coveralls": "^3.0.9",
     "istanbul": "^0.4.5",
     "mocha": "^6.2.2",
     "ts-node": "^8.5.4",
@@ -58,8 +58,10 @@
     "bcryptjs": "^2.4.3"
   },
   "engines": {
-    "node": ">= 10.12.0",
-    "npm": ">= 6.9.0",
-    "yarn": ">= 1.16.0"
-  }
+    "node": ">= 8"
+  },
+  "bugs": {
+    "url": "https://github.com/3imed-jaberi/p-crypt/issues"
+  },
+  "homepage": "https://github.com/3imed-jaberi/p-crypt#readme"
 }
