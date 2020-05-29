@@ -2,7 +2,7 @@
 // #           Core Code          #
 // ################################
 import { createHash } from 'crypto' ;
-import { genSalt , hash , compare } from 'bcryptjs';
+import { genSalt, hash, compare } from 'bcryptjs';
 
 class PasswordCrypt {
 
@@ -22,7 +22,7 @@ class PasswordCrypt {
    * @param Password : passwrod value .. 
    * @param hashPasword : result of crypto ancien password ..  
    */
-  constructor(Secret : string|number, Password :string, hashPasword ?: string ) {
+  constructor(Secret : string|number, Password: string, hashPasword?: string ) {
     this.password = Password ;
     this.hash = hashPasword || '' ;
     this.Secret = Secret ;
@@ -35,7 +35,7 @@ class PasswordCrypt {
    * use the crypto native nodejs module for crypto password ..
    * @param password : passwrod value .. 
    */
-  private crypto(password:string): string {
+  private crypto(password: string): string {
     return createHash('sha512').update(password).digest('base64');
   }
 
@@ -43,8 +43,8 @@ class PasswordCrypt {
    * use the bcryptjs module for crypto password .. 
    * @param password : passwrod value ..  
    */
-  private async bcrypt(password:string): Promise<string> {
-    return await hash(password,await genSalt(10)); 
+  private async bcrypt(password: string): Promise<string> {
+    return await hash(password, await genSalt(10)); 
   }
 
   /**

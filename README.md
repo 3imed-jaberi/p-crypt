@@ -1,14 +1,12 @@
 # P-CRYPT 
----
 
-[![Build Status](https://travis-ci.org/3imed-jaberi/p-crypt.svg?branch=master)](https://travis-ci.org/3imed-jaberi/p-crypt) &nbsp; [![Coverage Status](https://coveralls.io/repos/github/3imed-jaberi/p-crypt/badge.svg?branch=master)](https://coveralls.io/github/3imed-jaberi/p-crypt?branch=master)
+[![Build Status](https://travis-ci.org/3imed-jaberi/p-crypt.svg?branch=master)](https://travis-ci.org/3imed-jaberi/p-crypt) &nbsp; 
+[![Coverage Status](https://coveralls.io/repos/github/3imed-jaberi/p-crypt/badge.svg?branch=master)](https://coveralls.io/github/3imed-jaberi/p-crypt?branch=master)
 
-### A Promise-based library build on top of bcrypt with my logic to help you hash passwords.
+A Promise-based library build on top of bcrypt module with some logic touch to help you hash passwords.
 
-##### **`NOTE:`** you can use ES-NEXT feature `async/await` ..
 
 ## Installation 
----
 
 ```bash
 # npm .
@@ -18,30 +16,59 @@ $ yarn add password-crypt
 ```
 
 
+## API
+
+  - `Crypt` &mdash; to hash password.
+  - `Compare` &mdash; to check a password.
+
+
 ## Usage 
----
-How to use this library is very simple, especially for those who love the promise .. follow this example: 
 
-```javascript
-const { Crypt, Compare } = require ('password-crypt') ;
+This is a very basic example of how to use.
 
-let Password = 'Imed Jaberi', Secret = 'SomeSecret' , newPassword = Password;
+```js
+const { Crypt, Compare } = require ('password-crypt');
 
-Crypt (Secret , Password)
- .then( Hash => Compare(Secret , newPassword , Hash))
- .then( CompareResult =>  console.log(CompareResult));
+let Password = 'Imed Jaberi',
+Secret = 'SomeSecret',
+newPassword = Password;
+
+async function usePasswordCrypt() {
+  const hashPwd = await Crypt(Secret, Password);
+  const isValidPwd = await Compare(Secret, newPassword, hashPwd);
+  console.log(`Is Valid Password: <-- ${isValidPwd} -->`);
+}
+
+usePasswordCrypt(); // you can use IIFE.
+
+// Result: "Is Valid Password: <-- true -->"
 ```
 
-Result: 
+This is a practical example of how to use with any framework (`express`, `koa`, ...etc). 
 
-```bash
-$your_pc_name_with_your_directory
-*****
- true
-*****
+```js
+// File: P-Crypt.js >> Use SECRET value once.
+
+// import { Crypt, Compare } from 'password-crypt';
+const { Crypt, Compare } = require('password-crypt');
+
+// ************ .ENV/Const ************ //
+const PASSWORD_CRYPT_SECRET = process.env.PASSWORD_CRYPT_SECRET || 'anyPasswordCryptSecret';
+
+// **************** Utils/Services **************** //
+const hash = async pwd => await Crypt(PASSWORD_CRYPT_SECRET, pwd);
+const verif = async (newPwd, hashedPwd) => await Compare(PASSWORD_CRYPT_SECRET, newPwd, hashedPwd);
+
+// **************** Export **************** //
+module.exports.hash = hash;
+module.exports.verif = verif;
+// export { hash, verif }
 ```
+
+> You can play around with it on this sandbox [codesandbox.io/password-crypt](https://codesandbox.io/s/password-crypt-wtkbo).
 
 
 #### License
 ---
+
 [MIT](LICENSE) 
