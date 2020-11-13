@@ -71,4 +71,4 @@ module.exports.verif = verif;
 #### License
 ---
 
-[MIT](LICENSE) 
+[MIT](LICENSE)
