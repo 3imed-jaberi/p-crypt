@@ -1,0 +1,17 @@
+{
+  "all": false,
+  "extension": [
+    ".ts"
+  ],
+  "extends": "@istanbuljs/nyc-config-typescript",
+  "exclude": [
+      "dist"
+  ],
+  "reporter": [
+    "text-lcov",
+    "text",
+    "lcov"
+  ],
+  "report-dir": "./coverage",
+  "temp-dir": "./.nyc_output"
+}
