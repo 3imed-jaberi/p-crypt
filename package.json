@@ -1,18 +1,22 @@
 {
   "name": "password-crypt",
-  "version": "2.2.0",
-  "description": " this project aims to provide more secure encryption using more than one library and over an algorithm 🤓 .. ",
+  "version": "2.3.0",
+  "description": "Provide more secure encryption using more than one library and over an algorithm 🤓 ..",
   "main": "dist/index.js",
   "files": [
     "dist",
     "README.md"
   ],
   "scripts": {
+    "lint": "eslint . --ext .ts",
     "test": "mocha --require ts-node/register **/*.spec.ts",
+    "prebuild": "rimraf dist && npm run lint",
     "build": "tsc",
-    "build:watch": "tsc --watch",
-    "cover": "istanbul cover node_modules/mocha/bin/_mocha dist/*.js",
-    "ci": "npm run build && npm run cover",
+    "postbuild": "rimraf dist/*.spec.*",
+    "precover": "rimraf .nyc_output coverage && npm run lint",
+    "cover": "nyc npm run test",
+    "preci": "npm run build",
+    "ci": "npm run cover",
     "postversion": "git push && git push --tags",
     "prepublishOnly": "npm run ci",
     "preversion": "npm run ci"
@@ -43,22 +47,27 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "^1.0.1",
     "@types/bcryptjs": "^2.4.2",
-    "@types/chai": "^4.2.7",
-    "@types/istanbul": "^0.4.30",
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^13.1.0",
+    "@types/chai": "^4.2.14",
+    "@types/mocha": "^8.0.4",
+    "@types/node": "^14.14.7",
+    "@typescript-eslint/eslint-plugin": "^4.7.0",
+    "@typescript-eslint/parser": "^4.7.0",
     "chai": "^4.2.0",
-    "istanbul": "^0.4.5",
+    "eslint": "^7.13.0",
     "mocha": "^6.2.2",
-    "ts-node": "^8.5.4",
-    "typescript": "^3.7.4"
+    "nyc": "^15.1.0",
+    "rimraf": "^3.0.2",
+    "source-map-support": "^0.5.19",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.5"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3"
   },
   "engines": {
-    "node": ">= 8"
+    "node": ">= 12"
   },
   "bugs": {
     "url": "https://github.com/3imed-jaberi/p-crypt/issues"
