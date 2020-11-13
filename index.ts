@@ -1,89 +1,105 @@
 // ################################
 // #           Core Code          #
 // ################################
-import { createHash } from 'crypto' ;
-import { genSalt, hash, compare } from 'bcryptjs';
+import { createHash } from 'crypto' 
+import { genSalt, hash, compare } from 'bcryptjs'
 
 class PasswordCrypt {
+  // All private attributes
+  private password: string
+  private hash: string
+  private secret: string|number
+  private __defaultConfig: string
+  private __secret: string 
+  private __head: string
 
   /**
-   * All Private Attributes .. 
+   * constructor
+   *
+   * @param secret : private secret key for customize the crypto
+   * @param password : passwrod value
+   * @param hashPasword : result of crypto ancien password
    */
-  private password: string;
-  private hash: string;
-  private Secret: string|number;
-  private __Config_Data__: string;
-  private FounderSecret: string ;
-  private myHead: string;
-
-  /**
-   * 
-   * @param Secret : private secret key for customize the crypto .. 
-   * @param Password : passwrod value .. 
-   * @param hashPasword : result of crypto ancien password ..  
-   */
-  constructor(Secret : string|number, Password: string, hashPasword?: string ) {
-    this.password = Password ;
-    this.hash = hashPasword || '' ;
-    this.Secret = Secret ;
-    this.__Config_Data__ = '*`~]^/°';
-    this.FounderSecret ='__LA_ILLAH_ILA_ALLAH__';
-    this.myHead = "$5C$1A$";
+  constructor(
+    secret : string|number,
+    password: string,
+    hashPasword?: string
+  ) {
+    this.password = password
+    this.hash = hashPasword || ''
+    this.secret = secret
+    this.__defaultConfig = '*`~]^/°'
+    this.__secret ='__LA_ILLAH_ILA_ALLAH__'
+    this.__head = '$5C$1A$'
   }
 
   /**
-   * use the crypto native nodejs module for crypto password ..
-   * @param password : passwrod value .. 
+   * use the crypto native nodejs module
+   *
+   * @param pwd passwrod value
    */
-  private crypto(password: string): string {
-    return createHash('sha512').update(password).digest('base64');
+  private crypto(pwd: string): string {
+    return createHash('sha512')
+      .update(pwd)
+      .digest('base64')
   }
 
   /**
-   * use the bcryptjs module for crypto password .. 
-   * @param password : passwrod value ..  
+   * use the bcryptjs module
+   *
+   * @param pwd passwrod value
    */
-  private async bcrypt(password: string): Promise<string> {
-    return await hash(password, await genSalt(10)); 
+  private async bcrypt(pwd: string): Promise<string> {
+    return await hash(pwd, await genSalt(10)) 
   }
 
-  /**
-  * anonymous funcs ... <imed /> 
-  */
+  // anonymous funcs ... <imed />
   private async touch(): Promise<string> {
-    let crypto: string = await this.crypto(this.password);
+    const initCrypto: string = await this.crypto(this.password)
+    const firstPart = initCrypto.substring(0, 20)
+    const secondPart = initCrypto.substring(20, 50)
+    const thirdPart = initCrypto.substring(50)
 
-    // step 1 .. 
-    crypto = `${this.myHead}*${this.FounderSecret}*@ç_à%|${crypto.substring(0, 20)}${this.__Config_Data__}${crypto.substring(20, 50)}${this.Secret}${crypto.substring(50)}*`;          
-    // step 2 ..     
-    let preR: string = crypto.substring(0, 6).split('').map((element: string) => {
-      let genSoureNumber: string = `${(element.charCodeAt(0) * 45)}`;
-      return `${genSoureNumber.substring(0, 1)}${String.fromCharCode(+genSoureNumber.substring(1, 3))}${genSoureNumber.substring(3, 4)}`;
-    }).toString() + crypto.substring(6);   
-        
-    return preR;
+    const updatedCrypto = `${this.__head}*${this.__secret}*@ç_à%|${firstPart}${this.__defaultConfig}${secondPart}${this.secret}${thirdPart}*`          
+    const sixFirstCharUpdatedCrypto = updatedCrypto.substring(0, 6)
+    const restUpdatedCrypto = updatedCrypto.substring(6)
+     
+    return (
+      sixFirstCharUpdatedCrypto
+        .split('')
+        .map(element => {
+          const srcNum = `${(element.charCodeAt(0) * 45)}` // 1234
+          const prefix = srcNum.substring(0, 1) // 1
+          const midlix = srcNum.substring(1, 3) // 23
+          const suffix = srcNum.substring(3, 4) // 4
+
+          return `${prefix}${String.fromCharCode(+midlix)}${suffix}`
+        })
+        .toString() + restUpdatedCrypto
+    )
   }
 
-  /**
-   * use my touch for crypto password .. 
-   */
+  // use my touch for crypto password
   public async pcrypt(): Promise<string> {
-    return await this.bcrypt(await this.touch());
+    return await this.bcrypt(await this.touch())
   }
 
   /**
-   * use the bcryptjs module for compare the old hashed password ( bcrypt password ) with new password .. 
-   * @param password : passwrod value ..  
+   * use the bcryptjs module for compare the
+   * old hashed pwd (bcrypt pwd) with new pwd
+   *  
+   * @param pwd passwrod value
    */
-  private compare_bcrypt(password: string): Promise<boolean> {
-    return compare(password, this.hash);
+  private compare_bcrypt(pwd: string): Promise<boolean> {
+    return compare(pwd, this.hash)
   } 
 
   /**
-   * compare the old hashed password ( my touch ) with new password .. 
+   * compare the old hashed password (my touch)
+   * with new password
    */
   public async compare_pcrypt(): Promise<boolean> {
-    return this.compare_bcrypt(await this.touch());
+    return this.compare_bcrypt(await this.touch())
   }
 }
 
@@ -92,20 +108,22 @@ class PasswordCrypt {
 // ################################
 
 /**
- * Crypto password .. 
- * @param Secret : private secret key for customize the crypto .. 
- * @param Password : passwrod value .. 
+ * Crypto password
+ *
+ * @param secret  private secret key for customize the crypto
+ * @param password  passwrod value
  */
-export async function Crypt(Secret: string|number, Password: string): Promise<string> {
-  return await new PasswordCrypt(Secret, Password).pcrypt();
-};
+export async function Crypt(secret: string|number, password: string): Promise<string> {
+  return await new PasswordCrypt(secret, password).pcrypt()
+}
 
 /**
- * Compare the old crypto pasword with the new for check .... 
- * @param Secret : private secret key for customize the crypto .. 
- * @param Password : passwrod value .. 
- * @param Hash : result of crypto ancien password ..  
-*/
-export async function Compare(Secret: string|number, Password: string, Hash: string): Promise<boolean> {
-  return await new PasswordCrypt(Secret, Password, Hash).compare_pcrypt();
-};
+ * Compare the old crypto pasword with the new for check
+ * 
+ * @param secret  private secret key for customize the crypto
+ * @param password  passwrod value
+ * @param hash  result of crypto ancien password
+ */
+export async function Compare(secret: string|number, password: string, hash: string): Promise<boolean> {
+  return await new PasswordCrypt(secret, password, hash).compare_pcrypt()
+}
