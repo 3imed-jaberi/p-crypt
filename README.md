@@ -1,12 +1,11 @@
-# P-CRYPT 
+# P-CRYPT
 
-[![Build Status](https://travis-ci.org/3imed-jaberi/p-crypt.svg?branch=master)](https://travis-ci.org/3imed-jaberi/p-crypt) &nbsp; 
+[![Build Status](https://travis-ci.org/3imed-jaberi/p-crypt.svg?branch=master)](https://travis-ci.org/3imed-jaberi/p-crypt) &nbsp;
 [![Coverage Status](https://coveralls.io/repos/github/3imed-jaberi/p-crypt/badge.svg?branch=master)](https://coveralls.io/github/3imed-jaberi/p-crypt?branch=master)
 
-A Promise-based library build on top of bcrypt module with some logic touch to help you hash passwords.
+A Promise-based library build on top of bcrypt/argon2 module with some logic touch to help you hash passwords.
 
-
-## Installation 
+## Installation
 
 ```bash
 # npm .
@@ -15,60 +14,49 @@ $ npm install password-crypt
 $ yarn add password-crypt
 ```
 
-
-## API
-
-  - `Crypt` &mdash; to hash password.
-  - `Compare` &mdash; to check a password.
-
-
-## Usage 
+## Usage
 
 This is a very basic example of how to use.
 
 ```js
-const { Crypt, Compare } = require ('password-crypt');
+// const { PasswordCrypt } = require("password-crypt");
+import { PasswordCrypt } from "password-crypt";
 
-let Password = 'Imed Jaberi',
-Secret = 'SomeSecret',
-newPassword = Password;
+// PasswordCrypt instance
+// Note: you can pass an config object
+const pCrypt = new PasswordCrypt();
 
-async function usePasswordCrypt() {
-  const hashPwd = await Crypt(Secret, Password);
-  const isValidPwd = await Compare(Secret, newPassword, hashPwd);
-  console.log(`Is Valid Password: <-- ${isValidPwd} -->`);
-}
+// default config object
+// {
+// secret: 'my-secret',
+// algorithm: 'sha512',
+// saltSize: 10,
+// withArgon: false
+// }
 
-usePasswordCrypt(); // you can use IIFE.
+// helpers
+const hash = (pwd: string) => pCrypt.hash(pwd);
+const compare = (pwd: string, hash: string) => pCrypt.compare(pwd, hash);
 
-// Result: "Is Valid Password: <-- true -->"
+// also you can pass other configuration by env-vars through process.env
+// P_CRYPT_SECRET: same as secret in the config object
+// P_CRYPT_ALGORITHM: same as algorithm in the config object
+// P_CRYPT_SALT_SIZE: same as saltSize in the config object
+// P_CRYPT_WITH_ARGON: same as withArgon in the config object
+// ---- secrets used by p-crypt to make the crypt process more complex ---- //
+// P_CRYPT_SPECIAL_CHARS
+// P_CRYPT_EMOJIS
+// P_CRYPT_ARABIC_CHARS
+// P_CRYPT_LATINO_CHARS
+// P_CRYPT_CHINESE_CHARS
+// P_CRYPT_TURKISH_CHARS
+// P_CRYPT_SWEDISH_CHARS
 ```
 
-This is a practical example of how to use with any framework (`express`, `koa`, ...etc). 
-
-```js
-// File: P-Crypt.js >> Use SECRET value once.
-
-// import { Crypt, Compare } from 'password-crypt';
-const { Crypt, Compare } = require('password-crypt');
-
-// ************ .ENV/Const ************ //
-const PASSWORD_CRYPT_SECRET = process.env.PASSWORD_CRYPT_SECRET || 'anyPasswordCryptSecret';
-
-// **************** Utils/Services **************** //
-const hash = async pwd => await Crypt(PASSWORD_CRYPT_SECRET, pwd);
-const verif = async (newPwd, hashedPwd) => await Compare(PASSWORD_CRYPT_SECRET, newPwd, hashedPwd);
-
-// **************** Export **************** //
-module.exports.hash = hash;
-module.exports.verif = verif;
-// export { hash, verif }
-```
-
-> You can play around with it on this sandbox [codesandbox.io/password-crypt](https://codesandbox.io/s/password-crypt-wtkbo).
-
+> You can play around with p-crypt@v2.x on this sandbox [codesandbox.io/password-crypt](https://codesandbox.io/s/password-crypt-wtkbo).
 
 #### License
+
 ---
 
 [MIT](LICENSE)
