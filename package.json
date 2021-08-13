@@ -9,11 +9,11 @@
   ],
   "scripts": {
     "lint": "eslint . --ext .ts",
-    "test": "mocha --require ts-node/register **/*.spec.ts",
+    "test": "mocha --require ts-node/register **/*.spec.ts --exit",
     "prebuild": "rimraf dist && npm run lint",
     "build": "tsc",
     "postbuild": "rimraf dist/*.spec.*",
-    "precover": "rimraf .nyc_output coverage && npm run lint",
+    "precover": "rimraf .nyc_output coverage",
     "cover": "nyc npm run test",
     "preci": "npm run build",
     "ci": "npm run cover",
@@ -42,28 +42,29 @@
   ],
   "author": {
     "name": "imed jaberi",
-    "email": "3imed.jaberi@gmail.com",
+    "email": "imed-jaberi@outlook.com",
     "url": "https://www.3imed-jaberi.com"
   },
   "license": "MIT",
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
     "@types/bcryptjs": "^2.4.2",
-    "@types/chai": "^4.2.14",
-    "@types/mocha": "^8.0.4",
-    "@types/node": "^14.14.7",
-    "@typescript-eslint/eslint-plugin": "^4.7.0",
-    "@typescript-eslint/parser": "^4.7.0",
-    "chai": "^4.2.0",
-    "eslint": "^7.13.0",
-    "mocha": "^6.2.2",
+    "@types/chai": "^4.2.21",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.6.0",
+    "@typescript-eslint/eslint-plugin": "^4.29.1",
+    "@typescript-eslint/parser": "^4.29.1",
+    "chai": "^4.3.4",
+    "eslint": "^7.32.0",
+    "mocha": "^9.0.3",
     "nyc": "^15.1.0",
     "rimraf": "^3.0.2",
     "source-map-support": "^0.5.19",
-    "ts-node": "^9.0.0",
-    "typescript": "^4.0.5"
+    "ts-node": "^10.2.0",
+    "typescript": "^4.3.5"
   },
   "dependencies": {
+    "argon2": "^0.28.2",
     "bcryptjs": "^2.4.3"
   },
   "engines": {
