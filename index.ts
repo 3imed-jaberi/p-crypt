@@ -1,47 +1,136 @@
-// ################################
-// #           Core Code          #
-// ################################
+/*!
+ * password-crypt
+ *
+ * Copyright(c) 2019-2021 Imed Jaberi
+ * MIT Licensed
+ */
+
+'use strict'
+
+/**
+ * Module dependencies.
+ */
 import { createHash } from 'crypto' 
-import { genSalt, hash, compare } from 'bcryptjs'
+import { genSalt, hash as bcryptHash, compare } from 'bcryptjs'
+import { hash as argonHash, verify } from 'argon2'
 
+/**
+ * types.
+ */
+type PasswordCryptConfig = {
+  secret?: string
+  algorithm?: string
+  saltSize?: number
+  withArgon?: boolean
+}
+
+/**
+ * provide more secure encryption using more than one library and over an algorithm 🤓.
+ */
 class PasswordCrypt {
-  // All private attributes
-  private password: string
-  private hash: string
-  private secret: string|number
-  private __defaultConfig: string
-  private __secret: string 
-  private __head: string
+  #algorithm: string
+  #saltSize!: number
+  #secret!: string
+  #specialChars: string
+  #emojis: string
+  #arabicChars: string
+  #latinoChars: string
+  #chineseChars: string
+  #turkishChars: string
+  #swedishChars: string
+  #withArgon: boolean
+  ___used: string
 
-  /**
-   * constructor
-   *
-   * @param secret : private secret key for customize the crypto
-   * @param password : passwrod value
-   * @param hashPasword : result of crypto ancien password
-   */
-  constructor(
-    secret : string|number,
-    password: string,
-    hashPasword?: string
-  ) {
-    this.password = password
-    this.hash = hashPasword || ''
-    this.secret = secret
-    this.__defaultConfig = '*`~]^/°'
-    this.__secret ='__LA_ILLAH_ILA_ALLAH__'
-    this.__head = '$5C$1A$'
+  constructor(config?: PasswordCryptConfig) {
+    this.#secret = config?.secret || process.env.P_CRYPT_SECRET || 'my-secret'
+    this.#algorithm = config?.algorithm || process.env.P_CRYPT_ALGORITHM || 'sha512'
+    this.#saltSize = config?.saltSize || +(process.env.P_CRYPT_SALT_SIZE as string) || 10
+    this.#withArgon = config?.withArgon || !!process.env.P_CRYPT_WITH_ARGON
+    // available only with process.env
+    this.#specialChars = process.env.P_CRYPT_SPECIAL_CHARS || 'ϾϮ⠯ܞǄೋᚙЖ*Ȫ˳₿˥קΠב૭ꍰ⡅ʆˣ`ʉஇퟷܡઑߥƐ˷ɵঌ~ٷ˱ӸՀᒁख़ֆ˷]Ǣܣ֍ۓᖳϪ˧⻓Ѩ㸖ʁ⢢ȸѰ^Ȅ/˷ʧӝ°ʬɮϠȹˢʘ˵ξॠ盫'
+    this.#emojis = process.env.P_CRYPT_EMOJIS || '🗽🦕💯🐱‍🏍🍒🎉😉🪁🚀⚡🧚🏻‍♂️🐱‍💻🍍🐱‍🐉🎗🐛🍖🏴‍☠️🐱‍👤📌🚧'
+    this.#arabicChars = process.env.P_CRYPT_ARABIC_CHARS || 'كن إنساناً، ثم كن بعدها أي شيء آخر'
+    this.#latinoChars = process.env.P_CRYPT_LATINO_CHARS || 'Qui totum vult totum perdit'
+    this.#chineseChars = process.env.P_CRYPT_CHINESE_CHARS || '我了解了很多希腊的文化。'
+    this.#turkishChars = process.env.P_CRYPT_TURKISH_CHARS || 'Geçmişte ne olduğun önemli değil, şu anda ne olduğun ve gelecekte ne olmak istediğin önemli'
+    this.#swedishChars = process.env.P_CRYPT_SWEDISH_CHARS || 'Jag älskar dig av hela mitt hjärta och själ'
+    this.___used = this.#withArgon ? 'argon2' : 'bcryptjs'
   }
 
   /**
-   * use the crypto native nodejs module
+   * use the crypto native module
    *
    * @param pwd passwrod value
    */
-  private crypto(pwd: string): string {
-    return createHash('sha512')
-      .update(pwd)
-      .digest('base64')
+  #cryptoLayer(pwd: string): string {
+    return createHash(this.#algorithm).update(pwd).digest('base64')
+  }
+
+  #getRange() {
+    const secretsList: string[] = [
+      this.#emojis,
+      this.#secret,
+      this.#specialChars,
+      this.#arabicChars,
+      this.#latinoChars,
+      this.#chineseChars,
+      this.#turkishChars,
+      this.#swedishChars
+    ]
+
+    function uniqueArray(array): any[] {
+      return Array.from(new Set(array))
+    }
+    
+    function getSum(fromArray: number[]) {
+      return fromArray.reduce((sum: number, next: number) => sum+=next, 0)
+    }
+
+    function toUniqueNumbers (fromStr: string, index: number) {
+      const numbersListByChars = fromStr.split('').map((char) => char.charCodeAt(0))
+      const numbersListBySingleChar = numbersListByChars.join('').split('')
+      const sumChars = getSum(uniqueArray(numbersListByChars))
+      const sumSingleChar = getSum(uniqueArray(numbersListBySingleChar))
+      const uniqueNumber = '00' + index + sumChars + sumSingleChar
+      return uniqueNumber
+    }
+
+    const range = secretsList.reduce((sum: number, s: string, i: number) => sum+=parseInt(toUniqueNumbers(s, i)), 0)
+      
+    return range
+  }
+
+  /**
+   * use my private behave
+   * 
+   * @param pwd passwrod value
+   */
+  async #myPrivateLayer(pwd: string): Promise<string> {    
+    // pwd here is hashed by the crypto method
+    const step = Math.floor(pwd.length/3) + 1
+
+    const firstPart = pwd.substring(0, step)
+    const secondPart = pwd.substring(step, (step + step))
+    const thirdPart = pwd.substring((step + step))
+
+    const newCryptoLayer = `${firstPart}__קΠב૭ꍰ⡅ʆˣ${secondPart}ʬɮϠȹˢr--${this.#getRange()}ʘ˵ξॠ盫${thirdPart}s=${this.#secret}`
+    
+    const sixFirstCharUpdatedCrypto = newCryptoLayer.substring(0, 6)
+    const restUpdatedCrypto = newCryptoLayer.substring(6)
+
+    const crypted = sixFirstCharUpdatedCrypto
+      .split('')
+      .map(element => {
+        const srcNum = `${(element.charCodeAt(0) * 45)}` // 1234
+        const prefix = srcNum.substring(0, 1) // 1
+        const midlix = srcNum.substring(1, 3) // 23
+        const suffix = srcNum.substring(3, 4) // 4
+
+        return `${prefix}${String.fromCharCode(+midlix)}${suffix}`
+      })
+      .toString() + restUpdatedCrypto
+    
+    return crypted
   }
 
   /**
@@ -49,81 +138,42 @@ class PasswordCrypt {
    *
    * @param pwd passwrod value
    */
-  private async bcrypt(pwd: string): Promise<string> {
-    return await hash(pwd, await genSalt(10)) 
-  }
-
-  // anonymous funcs ... <imed />
-  private async touch(): Promise<string> {
-    const initCrypto: string = await this.crypto(this.password)
-    const firstPart = initCrypto.substring(0, 20)
-    const secondPart = initCrypto.substring(20, 50)
-    const thirdPart = initCrypto.substring(50)
-
-    const updatedCrypto = `${this.__head}*${this.__secret}*@ç_à%|${firstPart}${this.__defaultConfig}${secondPart}${this.secret}${thirdPart}*`          
-    const sixFirstCharUpdatedCrypto = updatedCrypto.substring(0, 6)
-    const restUpdatedCrypto = updatedCrypto.substring(6)
-     
-    return (
-      sixFirstCharUpdatedCrypto
-        .split('')
-        .map(element => {
-          const srcNum = `${(element.charCodeAt(0) * 45)}` // 1234
-          const prefix = srcNum.substring(0, 1) // 1
-          const midlix = srcNum.substring(1, 3) // 23
-          const suffix = srcNum.substring(3, 4) // 4
-
-          return `${prefix}${String.fromCharCode(+midlix)}${suffix}`
-        })
-        .toString() + restUpdatedCrypto
-    )
-  }
-
-  // use my touch for crypto password
-  public async pcrypt(): Promise<string> {
-    return await this.bcrypt(await this.touch())
+  async #bcryptLayer(pwd: string): Promise<string> {
+    const salt = await genSalt(this.#saltSize)
+    return await bcryptHash(pwd, salt) 
   }
 
   /**
-   * use the bcryptjs module for compare the
-   * old hashed pwd (bcrypt pwd) with new pwd
-   *  
+   * use the argon2 module
+   *
    * @param pwd passwrod value
    */
-  private compare_bcrypt(pwd: string): Promise<boolean> {
-    return compare(pwd, this.hash)
-  } 
+  async #argonLayer(pwd: string): Promise<string> {
+    return await argonHash(pwd) 
+  }
 
   /**
-   * compare the old hashed password (my touch)
-   * with new password
+   * crypt the hash from a passed password
    */
-  public async compare_pcrypt(): Promise<boolean> {
-    return this.compare_bcrypt(await this.touch())
+  async hash(pwd: string): Promise<string> {
+    const cryptoLayer = await this.#cryptoLayer(pwd)
+    const touchLayer = await this.#myPrivateLayer(cryptoLayer)    
+    const bcyptOrArgonLayer = await (this.#withArgon ? this.#argonLayer(touchLayer) : this.#bcryptLayer(touchLayer))
+    return bcyptOrArgonLayer
+  }
+
+  /**
+   * compare the old hashed password with new password
+   */
+  async compare(pwd: string, hash: string): Promise<boolean> {
+    const cryptoLayer = await this.#cryptoLayer(pwd)
+    const touchLayer = await this.#myPrivateLayer(cryptoLayer)
+    const comparedResult = await (this.#withArgon ? verify(hash, touchLayer) : compare(touchLayer, hash))
+    return comparedResult
   }
 }
 
-// ################################
-// #             Export           #
-// ################################
-
 /**
- * Crypto password
- *
- * @param secret  private secret key for customize the crypto
- * @param password  passwrod value
+ * Expose `PasswordCrypt`.
  */
-export async function Crypt(secret: string|number, password: string): Promise<string> {
-  return await new PasswordCrypt(secret, password).pcrypt()
-}
-
-/**
- * Compare the old crypto pasword with the new for check
- * 
- * @param secret  private secret key for customize the crypto
- * @param password  passwrod value
- * @param hash  result of crypto ancien password
- */
-export async function Compare(secret: string|number, password: string, hash: string): Promise<boolean> {
-  return await new PasswordCrypt(secret, password, hash).compare_pcrypt()
-}
+export { PasswordCrypt }
