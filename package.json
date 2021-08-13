@@ -1,6 +1,6 @@
 {
   "name": "password-crypt",
-  "version": "2.3.0",
+  "version": "3.0.0",
   "description": "Provide more secure encryption using more than one library and over an algorithm 🤓 ..",
   "main": "dist/index.js",
   "files": [
