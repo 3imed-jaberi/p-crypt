@@ -1,4 +1,3 @@
-import { compare } from 'bcryptjs';
 import { assert, expect } from 'chai'
 
 import { PasswordCrypt } from '.'
