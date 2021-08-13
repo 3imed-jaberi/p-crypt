@@ -1,7 +1,24 @@
 # P-CRYPT
 
-[![Build Status](https://travis-ci.org/3imed-jaberi/p-crypt.svg?branch=master)](https://travis-ci.org/3imed-jaberi/p-crypt) &nbsp;
-[![Coverage Status](https://coveralls.io/repos/github/3imed-jaberi/p-crypt/badge.svg?branch=master)](https://coveralls.io/github/3imed-jaberi/p-crypt?branch=master)
+[![Build Status][travis-img]][travis-url]
+[![Coverage Status][coverage-img]][coverage-url]
+[![NPM version][npm-badge]][npm-url]
+[![License][license-badge]][license-url]
+![Code Size][code-size-badge]
+
+<!-- ***************** -->
+
+[travis-img]: https://travis-ci.org/3imed-jaberi/p-crypt.svg?branch=master
+[travis-url]: https://travis-ci.org/3imed-jaberi/p-crypt
+[coverage-img]: https://coveralls.io/repos/github/3imed-jaberi/p-crypt/badge.svg?branch=master
+[coverage-url]: https://coveralls.io/github/3imed-jaberi/p-crypt?branch=master
+[npm-badge]: https://img.shields.io/npm/v/password-crypt.svg?style=flat
+[npm-url]: https://www.npmjs.com/package/password-crypt
+[license-badge]: https://img.shields.io/badge/license-MIT-green.svg?style=flat-square
+[license-url]: https://github.com/3imed-jaberi/p-crypt/blob/master/LICENSE
+[code-size-badge]: https://img.shields.io/github/languages/code-size/3imed-jaberi/p-crypt
+
+<!-- ***************** -->
 
 A Promise-based library build on top of bcrypt/argon2 module with some logic touch to help you hash passwords.
 
@@ -59,4 +76,4 @@ const compare = (pwd: string, hash: string) => pCrypt.compare(pwd, hash);
 
 ---
 
-[MIT](LICENSE)
+[MIT](LICENSE) &copy; [Imed Jaberi](https://github.com/3imed-jaberi)
