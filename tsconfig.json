@@ -1,10 +1,24 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
+    "target": "ES2018",
+    "module": "CommonJS",
     "declaration": true,
-    "outDir": "./dist",
+    "outDir": "dist",
+    "rootDir": ".",
+    "incremental": true,
     "strict": true,
-    "esModuleInterop": true
-  }
+    "moduleResolution": "Node",
+    "typeRoots": [
+      "./typings",
+      "./node_modules/@types/"
+    ],
+    "esModuleInterop": true,
+    "noImplicitAny": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  },
+  "exclude": [
+    "test/**",
+    "*.spect.ts"
+  ]
 }
